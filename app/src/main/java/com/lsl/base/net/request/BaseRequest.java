@@ -29,6 +29,7 @@ import okhttp3.Response;
 /**
  * Created by Forrest
  * on 2017/6/18 15:49
+ * 所有请求的基类，其中泛型 R 主要用于属性设置方法后，返回对应的子类型，以便于实现链试调用
  */
 
 public abstract class BaseRequest<R extends BaseRequest> {
