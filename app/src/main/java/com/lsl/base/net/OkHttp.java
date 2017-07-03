@@ -7,6 +7,8 @@ import android.os.Looper;
 import com.lsl.base.common.BLog;
 import com.lsl.base.net.cache.CacheEntity;
 import com.lsl.base.net.cache.CacheMode;
+import com.lsl.base.net.cookie.CookieJarImpl;
+import com.lsl.base.net.cookie.store.CookieStore;
 import com.lsl.base.net.https.HttpsUtils;
 import com.lsl.base.net.interceptor.HttpLoggingInterceptor;
 import com.lsl.base.net.model.HttpHeaders;
@@ -38,7 +40,7 @@ public class OkHttp {
     private int mRetryCount = 3;                                //全局超时重试次数
     private long mCacheTime = CacheEntity.CACHE_NEVER_EXPIRE;   //全局缓存过期时间,默认永不过期
     private static Application context;                         //全局上下文
-//    private CookieJarImpl cookieJar;                            //全局 Cookie 实例
+    private CookieJarImpl cookieJar;                            //全局 Cookie 实例
 
     private OkHttp() {
         //该类只在GApp中调用一次，生成一个公用的HttpClient,
@@ -146,10 +148,15 @@ public class OkHttp {
         return this;
     }
 
-//    /** 获取全局的cookie实例 */
-//    public CookieJarImpl getCookieJar() {
-//        return cookieJar;
-//    }
+    public OkHttp setCookieStore(CookieStore cookieStore){
+        cookieJar = new CookieJarImpl(cookieStore);
+        okHttpClientBuilder.cookieJar(cookieJar);
+        return this;
+    }
+    /** 获取全局的cookie实例 */
+    public CookieJarImpl getCookieJar() {
+        return cookieJar;
+    }
     /** 全局读取超时时间 */
     public OkHttp setReadTimeOut(long readTimeOut){
         okHttpClientBuilder.readTimeout(readTimeOut,TimeUnit.MILLISECONDS);
