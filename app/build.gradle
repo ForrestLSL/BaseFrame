@@ -1,13 +1,17 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.jakewharton.butterknife'
 
+def buildSdkVersion = 24
+def buildToolVersion = "24.0.3"
+def supportVersion = "24.2.1"
+
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion buildSdkVersion
+    buildToolsVersion buildToolVersion
     defaultConfig {
         applicationId "com.lsl.base"
         minSdkVersion 14
-        targetSdkVersion 25
+        targetSdkVersion 24
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -22,6 +26,7 @@ android {
     configurations.all {
         resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
     }
+    buildToolsVersion '25.0.0'
 }
 
 dependencies {
@@ -30,7 +35,11 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:appcompat-v7:' + supportVersion
+    compile 'com.android.support:design:' + supportVersion
+    compile 'com.android.support:recyclerview-v7:' + supportVersion
+    compile 'com.android.support:cardview-v7:' + supportVersion
+
     testCompile 'junit:junit:4.12'
     compile 'com.squareup.okhttp3:okhttp:3.8.0'
     //RxAndroid
@@ -52,7 +61,12 @@ dependencies {
     //EasyPermission
     compile 'pub.devrel:easypermissions:0.4.2'
 
+    //material-design-dialog
+    compile 'com.afollestad.material-dialogs:commons:0.9.4.5'
+    //Gson解析
+    compile 'com.google.code.gson:gson:2.7'
     //未来要接入Ijkplayer，直播相关的东西
+
 
 
 }

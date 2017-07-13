@@ -13,6 +13,8 @@ import com.lsl.base.net.https.HttpsUtils;
 import com.lsl.base.net.interceptor.HttpLoggingInterceptor;
 import com.lsl.base.net.model.HttpHeaders;
 import com.lsl.base.net.model.HttpParams;
+import com.lsl.base.net.request.GetRequest;
+
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -92,6 +94,12 @@ public class OkHttp {
         debug(tag,Level.INFO,true);
         return this;
     }
+
+    /** get请求 */
+    public static GetRequest get(String url) {
+        return new GetRequest(url);
+    }
+
     /**
      * 调试模式,第三个参数表示所有catch住的log是否需要打印
      * 一般来说,这些异常是由于不标准的数据格式,或者特殊需要主动产生的,并不是框架错误,如果不想每次打印,这里可以关闭异常显示

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">BaseFrame</string>
+    <string name="simple_view_behavior">com.lsl.base.widget.SimpleViewBehavior</string>
 </resources>
