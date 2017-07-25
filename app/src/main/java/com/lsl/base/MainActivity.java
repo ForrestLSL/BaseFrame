@@ -1,23 +1,35 @@
 package com.lsl.base;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.widget.ImageView;
 import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.reflect.TypeToken;
+import com.lsl.base.bean.ActivityBean;
 import com.lsl.base.bean.ContractBean;
 import com.lsl.base.common.BLog;
 import com.lsl.base.common.BaseActivity;
 import com.lsl.base.common.BaseBean;
+import com.lsl.base.common.URLs;
+import com.lsl.base.example.CacheActivity;
+import com.lsl.base.loader.GlideApp;
 import com.lsl.base.net.OkHttp;
 import com.lsl.base.net.cache.CacheMode;
+import com.lsl.base.net.callback.JsonCallback;
 import com.lsl.base.net.callback.StringDialogCallback;
 import com.lsl.base.parser.BaseBeanParser;
 import com.lsl.base.utils.ContractUtil;
 
 import java.text.ParseException;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.Call;
@@ -43,6 +55,8 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        GlideApp.with(this).load("").apply(RequestOptions.fitCenterTransform().placeholder(3)).into(new ImageView(this));
+//        Glide.with(MainActivity.this).load("").into(new ImageView(this));
 
     }
 
@@ -70,25 +84,27 @@ public class MainActivity extends BaseActivity {
     }
 
     private void getContract(){
-       OkHttp.get("http://192.168.10.204:8080/user_contacts/getList")
-               .tag(this)
-               .cacheMode(CacheMode.NO_CACHE)
-               .execute(new StringDialogCallback(this) {
-                   @Override
-                   public void onSuccess(String s, Call call, Response response) {
-                       BaseBean<ContractBean> contractBean = null;
-                       try {
-                           contractBean=new BaseBeanParser<BaseBean<ContractBean>>(
-                                   new TypeToken<BaseBean<ContractBean>>() {
-                                   }).parse(s.getBytes());
-                       } catch (ParseException e) {
-                           e.printStackTrace();
-                       }
-                       BLog.i(contractBean.getData().getPush().get(0).getName());
-                       ContractUtil.addContactList(MainActivity.this, contractBean.getData().getPush());
-                       Toast.makeText(MainActivity.this,"s="+s,Toast.LENGTH_SHORT).show();
-                   }
-               });
+        //"http://192.168.10.204:8080/user_contacts/getList"
+//       OkHttp.get(URLs.GET_HQ_ACTIVITY_LIST)
+//               .tag(this)
+//               .cacheMode(CacheMode.NO_CACHE)
+//               .execute(new StringDialogCallback(this) {
+//                   @Override
+//                   public void onSuccess(String s, Call call, Response response) {
+//                       BaseActivity activity = (BaseActivity) call.request().tag();
+//                       activity.startActivity(new Intent(activity, CacheActivity.class));
+//                   }
+//               });
+        OkHttp.get(URLs.GET_HQ_ACTIVITY_LIST)
+                .tag(this)
+                .cacheMode(CacheMode.NO_CACHE)
+                .execute(new JsonCallback<BaseBean<List<ActivityBean>>>() {
+                    @Override
+                    public void onSuccess(BaseBean<List<ActivityBean>> activityBeanBaseBean, Call call, Response response) {
+                        BLog.i("获取成功");
+                        BLog.i("地址：" + activityBeanBaseBean.getData().get(0).getImagePath());
+                    }
+                });
     }
 
 

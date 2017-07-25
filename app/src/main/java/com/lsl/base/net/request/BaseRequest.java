@@ -33,10 +33,10 @@ import okhttp3.Response;
  */
 
 public abstract class BaseRequest<R extends BaseRequest> {
-    protected String mUrl;
-    protected String mMethod;
-    protected String mBaseUrl;
-    protected Object mTag;
+    protected String url;
+    protected String method;
+    protected String baseUrl;
+    protected Object tag;
     protected long mReadTimeOut;
     protected long mWriteTimeOut;
     protected long mConnectTimeOut;
@@ -53,8 +53,8 @@ public abstract class BaseRequest<R extends BaseRequest> {
     private Request mRequest;
 
     public BaseRequest(String url){
-        this.mUrl = url;
-        mBaseUrl = url;
+        this.url = url;
+        baseUrl = url;
         OkHttp okHttp = OkHttp.getInstance();
         //默认添加 Accept-Language
         String acceptLanguage = HttpHeaders.getAcceptLanguage();
@@ -74,13 +74,13 @@ public abstract class BaseRequest<R extends BaseRequest> {
 
     @SuppressWarnings("unchecked")
     public R url(String url) {
-        this.mUrl = url;
+        this.url = url;
         return (R) this;
     }
 
     @SuppressWarnings("unchecked")
     public R tag(Object tag) {
-        this.mTag = tag;
+        this.tag = tag;
         return (R) this;
     }
 
@@ -249,15 +249,15 @@ public abstract class BaseRequest<R extends BaseRequest> {
     }
 
     public String getUrl() {
-        return mUrl;
+        return url;
     }
 
     public String getBaseUrl() {
-        return mBaseUrl;
+        return baseUrl;
     }
 
     public Object getTag() {
-        return mTag;
+        return tag;
     }
 
     public CacheMode getCacheMode() {
@@ -301,7 +301,7 @@ public abstract class BaseRequest<R extends BaseRequest> {
      * GET,POST,HEAD,PUT,DELETE,OPTIONS
      */
     public String getMethod() {
-        return mMethod;
+        return method;
     }
 
     /** 根据不同的请求方式和参数，生成不同的RequestBody */

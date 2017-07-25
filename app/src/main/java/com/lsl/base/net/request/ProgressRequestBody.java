@@ -81,7 +81,7 @@ public class ProgressRequestBody extends RequestBody {
             if (contentLength <= 0) contentLength =contentLength();
             bytesWritten += byteCount;
             long curTime = System.currentTimeMillis();
-            //每100ms 刷新一次数据
+            //每200ms 刷新一次数据
             if (curTime - lastRefreshUiTime >= OkHttp.REFRESH_TIME || bytesWritten == contentLength){
                 //计算下载速度
                 long diffTime = (curTime - lastRefreshUiTime) /1000;

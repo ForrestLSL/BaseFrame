@@ -7,13 +7,14 @@ import okhttp3.RequestBody;
 
 /**
  * Created by Forrest
- * on 2017/7/13 10:28
+ * on 2017/7/25 10:16
  */
 
-public class GetRequest extends BaseRequest<GetRequest> {
-    public GetRequest(String url) {
+public class HeadRequest extends BaseRequest<HeadRequest>{
+
+    public HeadRequest(String url) {
         super(url);
-        method = "GET";
+        method = "HEAD";
     }
 
     @Override
@@ -23,8 +24,8 @@ public class GetRequest extends BaseRequest<GetRequest> {
 
     @Override
     public Request generateRequest(RequestBody requestBody) {
-        Request.Builder requestBuilder = HttpUtils.appendHeaders(mHeaders);
+        Request.Builder builder = HttpUtils.appendHeaders(mHeaders);
         url = HttpUtils.createUrlFromParams(baseUrl, mParams.urlParamsMap);
-        return requestBuilder.get().url(url).tag(tag).build();
+        return builder.head().url(url).tag(tag).build();
     }
 }

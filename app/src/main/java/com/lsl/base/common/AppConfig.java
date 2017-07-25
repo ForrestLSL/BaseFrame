@@ -2,6 +2,8 @@ package com.lsl.base.common;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Environment;
+
 import com.lsl.base.net.OkHttp;
 import com.lsl.base.net.cache.CacheEntity;
 import com.lsl.base.net.cache.CacheMode;
@@ -9,6 +11,8 @@ import com.lsl.base.net.cookie.store.MemoryCookieStore;
 import com.lsl.base.net.cookie.store.PersistentCookieStore;
 import com.lsl.base.net.model.HttpHeaders;
 import com.lsl.base.net.model.HttpParams;
+
+import java.io.File;
 import java.io.IOException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -25,13 +29,14 @@ import okhttp3.Response;
  */
 
 public class AppConfig {
-
+    public static  String DM_FOLDER;
     /**
      * APP的初始化
      * @param context
      */
     public static void init(Application context){
-         initOkHttp(context);
+        initOkHttp(context);
+        DM_FOLDER = Environment.getDownloadCacheDirectory() + File.separator + "Download" + File.separator;
 
     }
 

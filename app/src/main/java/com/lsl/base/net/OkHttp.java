@@ -27,11 +27,12 @@ import okhttp3.OkHttpClient;
 /**
  * Created by Forrest
  * on 2017/6/18 17:11
+ * 封装OkHttp的入口
  */
 
 public class OkHttp {
     public static final int DEFAULT_MILLISECONDS = 60000;       //默认的超时时间
-    public static int REFRESH_TIME = 100;                       //回调刷新时间（单位ms）
+    public static int REFRESH_TIME = 200;                       //回调刷新时间（单位ms）
 
     private Handler mDelivery;                                  //用于在主线程执行的调度器
     private OkHttpClient.Builder okHttpClientBuilder;           //ok请求的客户端

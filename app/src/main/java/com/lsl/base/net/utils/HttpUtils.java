@@ -1,15 +1,23 @@
 package com.lsl.base.net.utils;
 
+import android.text.TextUtils;
+
 import com.lsl.base.common.BLog;
 import com.lsl.base.net.model.HttpHeaders;
+import com.lsl.base.net.model.HttpParams;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.FormBody;
 import okhttp3.Headers;
+import okhttp3.MultipartBody;
 import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * Created by Forrest
@@ -57,4 +65,89 @@ public class HttpUtils {
         requestBuilder.headers(headerBuilder.build());
         return requestBuilder;
     }
+
+
+    /** 生成类似表单的请求体 */
+    public static RequestBody generateMultipartRequestBody(HttpParams params, boolean isMultipart) {
+        if (params.fileParamsMap.isEmpty() && !isMultipart) {
+            //表单提交，没有文件
+            FormBody.Builder bodyBuilder = new FormBody.Builder();
+            for (String key : params.urlParamsMap.keySet()) {
+                List<String> urlValues = params.urlParamsMap.get(key);
+                for (String value : urlValues) {
+                    bodyBuilder.add(key, value);
+                }
+            }
+            return bodyBuilder.build();
+        } else {
+            //表单提交，有文件
+            MultipartBody.Builder multipartBodybuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+            //拼接键值对
+            if (!params.urlParamsMap.isEmpty()) {
+                for (Map.Entry<String, List<String>> entry : params.urlParamsMap.entrySet()) {
+                    List<String> urlValues = entry.getValue();
+                    for (String value : urlValues) {
+                        multipartBodybuilder.addFormDataPart(entry.getKey(), value);
+                    }
+                }
+            }
+            //拼接文件
+            for (Map.Entry<String, List<HttpParams.FileWrapper>> entry : params.fileParamsMap.entrySet()) {
+                List<HttpParams.FileWrapper> fileValues = entry.getValue();
+                for (HttpParams.FileWrapper fileWrapper : fileValues) {
+                    RequestBody fileBody = RequestBody.create(fileWrapper.contentType, fileWrapper.file);
+                    multipartBodybuilder.addFormDataPart(entry.getKey(), fileWrapper.fileName, fileBody);
+                }
+            }
+            return multipartBodybuilder.build();
+        }
+    }
+
+    /** 根据响应头或者url获取文件名 */
+    public static String getNetFileName(Response response, String url) {
+        String fileName = getHeaderFileName(response);
+        if (TextUtils.isEmpty(fileName)) fileName = getUrlFileName(url);
+        if (TextUtils.isEmpty(fileName)) fileName = "nofilename";
+        return fileName;
+    }
+
+    /** 解析文件头 Content-Disposition:attachment;filename=FileName.txt */
+    private static String getHeaderFileName(Response response) {
+        String dispositionHeader = response.header(HttpHeaders.HEAD_KEY_CONTENT_DISPOSITION);
+        if (dispositionHeader != null) {
+            String split = "filename=";
+            int indexOf = dispositionHeader.indexOf(split);
+            if (indexOf != -1) {
+                String fileName = dispositionHeader.substring(indexOf + split.length(), dispositionHeader.length());
+                fileName = fileName.replaceAll("\"", "");   //文件名可能包含双引号,需要去除
+                return fileName;
+            }
+        }
+        return null;
+    }
+    /** 通过 ‘？’ 和 ‘/’ 判断文件名 */
+    private static String getUrlFileName(String url) {
+        int index = url.lastIndexOf('?');
+        String filename;
+        if (index > 1) {
+            filename = url.substring(url.lastIndexOf('/') + 1, index);
+        } else {
+            filename = url.substring(url.lastIndexOf('/') + 1);
+        }
+        return filename;
+    }
+
+    /** 根据路径删除文件 */
+    public static boolean deleteFile(String path) {
+        if (TextUtils.isEmpty(path)) return true;
+        File file = new File(path);
+        if (!file.exists()) return true;
+        if (file.isFile()) {
+            boolean delete = file.delete();
+            BLog.e("deleteFile:" + delete + " path:" + path);
+            return delete;
+        }
+        return false;
+    }
+
 }

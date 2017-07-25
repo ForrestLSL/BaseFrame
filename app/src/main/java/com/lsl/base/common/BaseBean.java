@@ -8,17 +8,17 @@ import java.io.Serializable;
  */
 
 public class BaseBean<T> implements Serializable{
-    private int id;
+    private int code;
     private boolean success;
     private String message;
     private T data;
 
-    public int getId() {
-        return id;
+    public int getCode() {
+        return code;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setCode(int code) {
+        this.code = code;
     }
 
     public boolean isSuccess() {
