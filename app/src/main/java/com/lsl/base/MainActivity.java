@@ -1,33 +1,23 @@
 package com.lsl.base;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.widget.ImageView;
 import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.google.gson.reflect.TypeToken;
+import com.lsl.base.adapter.MainAdapter;
 import com.lsl.base.bean.ActivityBean;
-import com.lsl.base.bean.ContractBean;
 import com.lsl.base.common.BLog;
 import com.lsl.base.common.BaseActivity;
 import com.lsl.base.common.BaseBean;
 import com.lsl.base.common.URLs;
-import com.lsl.base.example.CacheActivity;
-import com.lsl.base.loader.GlideApp;
 import com.lsl.base.net.OkHttp;
 import com.lsl.base.net.cache.CacheMode;
 import com.lsl.base.net.callback.JsonCallback;
-import com.lsl.base.net.callback.StringDialogCallback;
-import com.lsl.base.parser.BaseBeanParser;
-import com.lsl.base.utils.ContractUtil;
 
-import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -57,6 +47,8 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 //        GlideApp.with(this).load("").apply(RequestOptions.fitCenterTransform().placeholder(3)).into(new ImageView(this));
 //        Glide.with(MainActivity.this).load("").into(new ImageView(this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
 
     }
 
@@ -103,6 +95,11 @@ public class MainActivity extends BaseActivity {
                     public void onSuccess(BaseBean<List<ActivityBean>> activityBeanBaseBean, Call call, Response response) {
                         BLog.i("获取成功");
                         BLog.i("地址：" + activityBeanBaseBean.getData().get(0).getImagePath());
+                        List<String> mData = new ArrayList<String>();
+                        for (ActivityBean bean : activityBeanBaseBean.getData()){
+                            mData.add(bean.getImagePath());
+                        }
+                        recyclerView.setAdapter(new MainAdapter(mData,MainActivity.this));
                     }
                 });
     }
