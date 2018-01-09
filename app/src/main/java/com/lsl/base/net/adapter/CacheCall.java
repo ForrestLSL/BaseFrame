@@ -3,6 +3,7 @@ package com.lsl.base.net.adapter;
 import android.graphics.Bitmap;
 
 import com.lsl.base.net.OkHttp;
+import com.lsl.base.net.callback.CallbackEntity;
 import com.lsl.base.net.exception.OkHttpExecption;
 import com.lsl.base.net.model.HttpHeaders;
 import com.lsl.base.net.utils.HeaderParser;
@@ -60,7 +61,7 @@ public class CacheCall<T> implements Call<T> {
         //请求之前获取缓存信息，添加缓存头和其他的公共头
         if (baseRequest.getCacheKey() == null)
             baseRequest.setCacheKey(HttpUtils.createUrlFromParams(baseRequest.getBaseUrl(), baseRequest.getParams().urlParamsMap));
-        if (baseRequest.getCacheMode() == null) baseRequest.setCacheMode(CacheMode.NO_CACHE);
+        if (baseRequest.getCacheMode() == null) baseRequest.setCacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST);
 
         //无缓存模式,不需要进入缓存逻辑
         final CacheMode cacheMode = baseRequest.getCacheMode();
@@ -156,7 +157,7 @@ public class CacheCall<T> implements Call<T> {
                 }
 
                 try {
-                    Response<T> parseResponse = parseResponse(response);
+                    Response<T> parseResponse = parseResponse(response,baseRequest);
                     T data = parseResponse.body();
                     //网络请求成功，保存缓存数据
                     handleCache(response.headers(), data);
@@ -204,7 +205,7 @@ public class CacheCall<T> implements Call<T> {
                         mCallback.onAfter(null, e);              //请求结束回调 （UI线程）
                     }
                 } else {
-                    mCallback.onError(call, response, e);        //请求失败回调 （UI线程）
+                    mCallback.onError(new CallbackEntity(response, call, baseRequest), e);        //请求失败回调 （UI线程）
                     if (cacheMode != CacheMode.REQUEST_FAILED_READ_CACHE) {
                         mCallback.onAfter(null, e);              //请求结束回调 （UI线程）
                     }
@@ -242,7 +243,7 @@ public class CacheCall<T> implements Call<T> {
                         mCallback.onAfter(t, null);              //请求结束回调 （UI线程）
                     }
                 } else {
-                    mCallback.onSuccess(t, call, response);      //请求成功回调 （UI线程）
+                    mCallback.onSuccess(t, new CallbackEntity(response, call, baseRequest));      //请求成功回调 （UI线程）
                     mCallback.onAfter(t, null);                  //请求结束回调 （UI线程）
                 }
             }
@@ -261,12 +262,12 @@ public class CacheCall<T> implements Call<T> {
         if (canceled) {
             call.cancel();
         }
-        return parseResponse(call.execute());
+        return parseResponse(call.execute(),baseRequest);
     }
 
-    private Response<T> parseResponse(okhttp3.Response rawResponse) throws Exception {
+    private Response<T> parseResponse(okhttp3.Response rawResponse, BaseRequest request) throws Exception {
         //noinspection unchecked
-        T body = (T) baseRequest.getConverter().convertSuccess(rawResponse);
+        T body = (T) baseRequest.getConverter().convertSuccess(rawResponse,request);
         return Response.success(body, rawResponse);
     }
 

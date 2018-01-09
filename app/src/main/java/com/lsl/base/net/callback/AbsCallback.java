@@ -43,14 +43,14 @@ public abstract class AbsCallback<T> implements Converter<T> {
     }
 
     /** 对返回数据进行操作的回调， UI线程 */
-    public abstract void onSuccess(T t, Call call, Response response);
+    public abstract void onSuccess(T t, CallbackEntity entity);
 
     /** 缓存成功的回调,UI线程 */
     public void onCacheSuccess(T t, Call call) {
     }
 
     /** 请求失败，响应错误，数据解析错误等，都会回调该方法， UI线程 */
-    public void onError(Call call, Response response, Exception e) {
+    public void onError(CallbackEntity entity, Exception e) {
     }
 
     /** 缓存失败的回调,UI线程 */

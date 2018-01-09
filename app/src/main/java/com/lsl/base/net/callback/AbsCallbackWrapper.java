@@ -1,5 +1,7 @@
 package com.lsl.base.net.callback;
 
+import com.lsl.base.net.request.BaseRequest;
+
 import okhttp3.Call;
 import okhttp3.Response;
 
@@ -11,13 +13,13 @@ import okhttp3.Response;
 
 public class AbsCallbackWrapper<T> extends AbsCallback<T> {
     @Override
-    public T convertSuccess(Response response) throws Exception {
+    public T convertSuccess(Response response, BaseRequest request) throws Exception {
         response.close();
         return (T) response;
     }
 
     @Override
-    public void onSuccess(T t, Call call, Response response) {
+    public void onSuccess(T t, CallbackEntity entity) {
 
     }
 }

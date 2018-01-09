@@ -14,6 +14,7 @@ import com.lsl.base.net.interceptor.HttpLoggingInterceptor;
 import com.lsl.base.net.model.HttpHeaders;
 import com.lsl.base.net.model.HttpParams;
 import com.lsl.base.net.request.GetRequest;
+import com.lsl.base.net.request.PostRequest;
 
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
@@ -72,7 +73,7 @@ public class OkHttp {
 
     /** 获取全局上下文 */
     public static Context getContext() {
-        if (context == null) throw new IllegalStateException("请先在全局Application中调用 OkGo.init() 初始化！");
+        if (context == null) throw new IllegalStateException("请先在全局Application中调用 OkHttp.init() 初始化！");
         return context;
     }
 
@@ -101,6 +102,9 @@ public class OkHttp {
         return new GetRequest(url);
     }
 
+    public static PostRequest post(String url){
+        return new PostRequest(url);
+    }
     /**
      * 调试模式,第三个参数表示所有catch住的log是否需要打印
      * 一般来说,这些异常是由于不标准的数据格式,或者特殊需要主动产生的,并不是框架错误,如果不想每次打印,这里可以关闭异常显示

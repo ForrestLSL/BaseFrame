@@ -46,7 +46,7 @@ public abstract class JsonCallback<T> extends AbsCallback<T>{
      * </pre>
      */
     @Override
-    public T convertSuccess(Response response) throws Exception {
+    public T convertSuccess(Response response ,BaseRequest request) throws Exception {
 
         //以下代码是通过泛型解析实际参数，泛型必须传
         //这里为了方便理解，假如请求的代码按照上述注释文档中的请求来写，那么下面分别得到是

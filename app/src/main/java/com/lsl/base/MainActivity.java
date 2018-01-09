@@ -14,7 +14,9 @@ import com.lsl.base.common.BaseActivity;
 import com.lsl.base.common.BaseBean;
 import com.lsl.base.common.URLs;
 import com.lsl.base.net.OkHttp;
+import com.lsl.base.net.cache.CacheManager;
 import com.lsl.base.net.cache.CacheMode;
+import com.lsl.base.net.callback.CallbackEntity;
 import com.lsl.base.net.callback.JsonCallback;
 
 import java.util.ArrayList;
@@ -87,12 +89,13 @@ public class MainActivity extends BaseActivity {
 //                       activity.startActivity(new Intent(activity, CacheActivity.class));
 //                   }
 //               });
+
         OkHttp.get(URLs.GET_HQ_ACTIVITY_LIST)
                 .tag(this)
                 .cacheMode(CacheMode.NO_CACHE)
                 .execute(new JsonCallback<BaseBean<List<ActivityBean>>>() {
                     @Override
-                    public void onSuccess(BaseBean<List<ActivityBean>> activityBeanBaseBean, Call call, Response response) {
+                    public void onSuccess(BaseBean<List<ActivityBean>> activityBeanBaseBean, CallbackEntity entity) {
                         BLog.i("获取成功");
                         BLog.i("地址：" + activityBeanBaseBean.getData().get(0).getImagePath());
                         List<String> mData = new ArrayList<String>();

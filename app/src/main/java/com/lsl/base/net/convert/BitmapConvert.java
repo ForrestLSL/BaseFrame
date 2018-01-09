@@ -3,6 +3,8 @@ package com.lsl.base.net.convert;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.lsl.base.net.request.BaseRequest;
+
 import okhttp3.Response;
 
 /**
@@ -21,7 +23,7 @@ public class BitmapConvert implements Converter<Bitmap>{
     }
 
     @Override
-    public Bitmap convertSuccess(Response response) throws Exception {
+    public Bitmap convertSuccess(Response response, BaseRequest request) throws Exception {
         return BitmapFactory.decodeStream(response.body().byteStream());
     }
 }

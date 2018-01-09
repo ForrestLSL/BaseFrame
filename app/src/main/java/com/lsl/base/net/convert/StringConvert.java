@@ -1,5 +1,7 @@
 package com.lsl.base.net.convert;
 
+import com.lsl.base.net.request.BaseRequest;
+
 import okhttp3.Response;
 
 /**
@@ -18,7 +20,7 @@ public class StringConvert implements Converter<String> {
     }
 
     @Override
-    public String convertSuccess(Response value) throws Exception {
+    public String convertSuccess(Response value, BaseRequest request) throws Exception {
         return value.body().string();
     }
 }

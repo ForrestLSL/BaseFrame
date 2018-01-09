@@ -1,6 +1,7 @@
 package com.lsl.base.net.callback;
 
 import com.lsl.base.net.convert.FileConvert;
+import com.lsl.base.net.request.BaseRequest;
 
 import java.io.File;
 
@@ -29,8 +30,8 @@ public abstract class FileCallback extends AbsCallback<File> {
     }
 
     @Override
-    public File convertSuccess(Response response) throws Exception {
-        File file = convert.convertSuccess(response);
+    public File convertSuccess(Response response, BaseRequest request) throws Exception {
+        File file = convert.convertSuccess(response,request);
         response.close();
         return file;
 

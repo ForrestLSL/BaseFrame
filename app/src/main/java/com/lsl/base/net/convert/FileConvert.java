@@ -6,6 +6,7 @@ import com.lsl.base.common.AppConfig;
 import com.lsl.base.common.BLog;
 import com.lsl.base.net.OkHttp;
 import com.lsl.base.net.callback.AbsCallback;
+import com.lsl.base.net.request.BaseRequest;
 import com.lsl.base.net.utils.HttpUtils;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -43,7 +44,7 @@ public class FileConvert implements Converter<File> {
 
 
     @Override
-    public File convertSuccess(Response response) throws Exception {
+    public File convertSuccess(Response response, BaseRequest request) throws Exception {
         if (TextUtils.isEmpty(destFileDir)) {
             destFileDir = Environment.getExternalStorageDirectory() + "/download/";
         }

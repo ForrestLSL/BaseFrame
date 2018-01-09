@@ -1,5 +1,7 @@
 package com.lsl.base.net.convert;
 
+import com.lsl.base.net.request.BaseRequest;
+
 import okhttp3.Response;
 
 /**
@@ -16,5 +18,5 @@ public interface Converter<T> {
      * @return 转换后的结果
      * @throws Exception 转换过程发生的异常
      */
-    T convertSuccess(Response response) throws Exception;
+    T convertSuccess(Response response, BaseRequest request) throws Exception;
 }
